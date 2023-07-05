@@ -24,7 +24,7 @@ module.exports = {
         type: Sequelize.ENUM,
         allowNull: false,
         values: [BOOKED, INITIATED, CANCELLED, PENDING],
-        defaultValue: PENDING
+        defaultValue: INITIATED
       },
       noofSeats: {
         type: Sequelize.INTEGER,
