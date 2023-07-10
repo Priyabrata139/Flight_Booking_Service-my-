@@ -1,5 +1,6 @@
 const express = require('express');
 
+const CornJobs = require('./utils/common/cornjobs');
 const { ServerConfig } = require('./config');
 const apiRoutes = require('./routes');
 
@@ -12,4 +13,6 @@ app.use('/api', apiRoutes);
 
 app.listen(ServerConfig.PORT, () => {
     console.log(`Successfully started the server on PORT : ${ServerConfig.PORT}`);
+    
+    CornJobs();
 });
