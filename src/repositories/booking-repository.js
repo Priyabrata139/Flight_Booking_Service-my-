@@ -3,7 +3,8 @@ const CrudRepository = require("./crud-repository");
 const { Booking } = require("../models");
 const { Op } = require("sequelize");
 const { BOOKED, CANCELLED } = require("../utils/common/enum");
-
+const AppError = require("../utils/errors/app-error");
+const { StatusCodes } = require("http-status-codes");
 class BookingRepository extends CrudRepository {
   constructor() {
     super(Booking);

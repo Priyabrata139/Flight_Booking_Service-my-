@@ -107,6 +107,7 @@ async function getBooking(id) {
     const booking = await bookingRepository.get(id);
     return booking;
   } catch (error) {
+    console.log(error);
     if (error.statusCode == StatusCodes.NOT_FOUND) {
       throw new AppError(
         "The booking you requested is not present",
