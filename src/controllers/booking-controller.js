@@ -8,6 +8,7 @@ const { SuccessResponse, ErrorResponse } = require("../utils/common");
  * req-body {userId: 1}
  */
 async function createBooking(req, res) {
+  console.log('inside controller');
   try {
     const booking = await BookingService.createBooking({
       flightId: req.body.flightId,
@@ -28,6 +29,7 @@ async function createBooking(req, res) {
  * req-body {}
  */
 async function getBookings(req, res) {
+  // console.log(req.headers['user'], req.headers['user-roles']);
   try {
     const bookings = await BookingService.getBookings();
     SuccessResponse.data = bookings;

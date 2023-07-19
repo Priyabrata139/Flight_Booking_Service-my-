@@ -2,6 +2,9 @@ const { StatusCodes } = require("http-status-codes");
 
 const axios = require("axios");
 
+var jwt = require('jsonwebtoken');
+
+
 const { Booking } = require("../models");
 
 const { BookingRepository } = require("../repositories");
@@ -58,11 +61,23 @@ async function createBooking(data) {
     bookingPayload.noofSeats = noofSeats;
     bookingPayload.totalCost = totalCost;
     console.log(bookingPayload);
-    await bookingRepository.create(bookingPayload, t);
+    
+    const booking = await bookingRepository.create(bookingPayload, t);
+    const token = jwt.sign({
+      data: booking
+    }, ServerConfig.JWT_SECRET, { expiresIn: '1h' });
+
+
     await axios.patch(
       `${ServerConfig.FLIGHT_SERVICE}/api/v1/flights/${data.flightId}/seats`,
       {
         seats: noofSeats,
+       
+      },
+      {
+        headers: {
+          jwt_token : token, jwt_secret_key : ServerConfig.JWT_SECRET
+          }
       }
     );
     // console.log(`${ServerConfig.FLIGHT_SERVICE}/api/v1/flights/${data.flightId}/seats`);
@@ -191,11 +206,22 @@ async function cancellBooking(bookingId) {
     );
     const flightData = flight.data.data;
     const noofSeats = booking.noofSeats;
+
+    
+    const token = jwt.sign({
+      data: booking
+    }, ServerConfig.JWT_SECRET, { expiresIn: '1h' });
+
     await axios.patch(
       `${ServerConfig.FLIGHT_SERVICE}/api/v1/flights/${flightData.id}/seats`,
       {
         seats: noofSeats,
         dec: false,
+      },
+      {
+        headers: {
+          jwt_token : token, jwt_secret_key : ServerConfig.JWT_SECRET
+          }
       }
     );
 
@@ -221,8 +247,9 @@ async function cancellOldBookings() {
       });
     }
 
-    return response;
+    return true;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
