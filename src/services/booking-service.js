@@ -67,7 +67,7 @@ async function createBooking(data) {
       data: booking
     }, ServerConfig.JWT_SECRET, { expiresIn: '1h' });
 
-
+    
     await axios.patch(
       `${ServerConfig.FLIGHT_SERVICE}/api/v1/flights/${data.flightId}/seats`,
       {
@@ -76,7 +76,7 @@ async function createBooking(data) {
       },
       {
         headers: {
-          jwt_token : token, jwt_secret_key : ServerConfig.JWT_SECRET
+          jwt_token : token
           }
       }
     );
@@ -101,7 +101,11 @@ async function createBooking(data) {
       throw new AppError(explanation, StatusCodes.BAD_REQUEST);
     }
 
-    throw error;
+    if (error instanceof AppError) {
+       throw error;
+    }
+    else
+    throw new AppError(['Something went wrong while createing booking'],StatusCodes.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -220,7 +224,7 @@ async function cancellBooking(bookingId) {
       },
       {
         headers: {
-          jwt_token : token, jwt_secret_key : ServerConfig.JWT_SECRET
+          jwt_token : token
           }
       }
     );
