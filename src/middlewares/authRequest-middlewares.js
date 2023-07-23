@@ -10,7 +10,7 @@ async function isAdminOrFlightCompany(req, res, next) {
   userRoles = userRoles.split(",");
 
   for (role of userRoles) {
-    if (role === " admin" || role === "flight_company") {
+    if (role === "admin" || role === "flight_company") {
       console.log("executing next()");
       next();
       return;
