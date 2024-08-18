@@ -8,7 +8,8 @@ const { SuccessResponse, ErrorResponse } = require("../utils/common");
  * req-body {userId: 1}
  */
 async function createBooking(req, res) {
-  console.log('inside controller');
+  console.log("inside controller", req.body);
+
   try {
     const booking = await BookingService.createBooking({
       flightId: req.body.flightId,
@@ -56,14 +57,14 @@ async function getBooking(req, res) {
 
 /**
  * POST : /bookings/payment
- * req-body {userId: 1, bookingId:3, totalAmmount: 13000}
+ * req-body {userId: 1, bookingId:3, totalAmount: 13000}
  */
 async function makePayment(req, res) {
   try {
     const payment = await BookingService.makePayment({
       bookingId: req.body.bookingId,
       userId: req.body.userId,
-      totalAmmount: req.body.totalAmmount,
+      totalAmount: req.body.totalAmount,
       idempotentKey: req.headers["x_idempotent_key"],
     });
     SuccessResponse.data = payment;

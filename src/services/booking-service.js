@@ -2,8 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 
 const axios = require("axios");
 
-var jwt = require('jsonwebtoken');
-
+var jwt = require("jsonwebtoken");
 
 const { Booking } = require("../models");
 
@@ -61,23 +60,25 @@ async function createBooking(data) {
     bookingPayload.noofSeats = noofSeats;
     bookingPayload.totalCost = totalCost;
     console.log(bookingPayload);
-    
-    const booking = await bookingRepository.create(bookingPayload, t);
-    const token = jwt.sign({
-      data: booking
-    }, ServerConfig.JWT_SECRET, { expiresIn: '1h' });
 
-    
+    const booking = await bookingRepository.create(bookingPayload, t);
+    const token = jwt.sign(
+      {
+        data: booking,
+      },
+      ServerConfig.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
     await axios.patch(
       `${ServerConfig.FLIGHT_SERVICE}/api/v1/flights/${data.flightId}/seats`,
       {
         seats: noofSeats,
-       
       },
       {
         headers: {
-          jwt_token : token
-          }
+          jwt_token: token,
+        },
       }
     );
     // console.log(`${ServerConfig.FLIGHT_SERVICE}/api/v1/flights/${data.flightId}/seats`);
@@ -102,10 +103,12 @@ async function createBooking(data) {
     }
 
     if (error instanceof AppError) {
-       throw error;
-    }
-    else
-    throw new AppError(['Something went wrong while createing booking'],StatusCodes.INTERNAL_SERVER_ERROR);
+      throw error;
+    } else
+      throw new AppError(
+        ["Something went wrong while createing booking"],
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
   }
 }
 
@@ -170,9 +173,9 @@ async function makePayment(data) {
         StatusCodes.BAD_REQUEST
       );
     }
-    if (booking.totalCost != data.totalAmmount) {
+    if (booking.totalCost != data.totalAmount) {
       throw new AppError(
-        ["totalAmmount does't match with this booking "],
+        ["totalAmount does't match with this booking "],
         StatusCodes.BAD_REQUEST
       );
     }
@@ -211,10 +214,13 @@ async function cancellBooking(bookingId) {
     const flightData = flight.data.data;
     const noofSeats = booking.noofSeats;
 
-    
-    const token = jwt.sign({
-      data: booking
-    }, ServerConfig.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      {
+        data: booking,
+      },
+      ServerConfig.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
     await axios.patch(
       `${ServerConfig.FLIGHT_SERVICE}/api/v1/flights/${flightData.id}/seats`,
@@ -224,8 +230,8 @@ async function cancellBooking(bookingId) {
       },
       {
         headers: {
-          jwt_token : token
-          }
+          jwt_token: token,
+        },
       }
     );
 
